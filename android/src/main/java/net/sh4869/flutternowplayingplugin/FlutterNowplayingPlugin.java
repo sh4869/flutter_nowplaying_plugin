@@ -14,7 +14,6 @@ import io.flutter.plugin.common.PluginRegistry.Registrar;
  * FlutterNowplayingPlugin
  */
 public class FlutterNowplayingPlugin implements MethodCallHandler {
-    private GooglePlayMusicReceiver receiver = new GooglePlayMusicReceiver();
 
     /**
      * Plugin registration.

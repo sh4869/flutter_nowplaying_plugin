@@ -12,8 +12,6 @@ import net.sh4869.flutternowplayingplugin.types.Track;
  */
 
 public class GooglePlayMusicReceiver extends BroadcastReceiver {
-
-
     @Override
     public void onReceive(Context context,Intent intent){
         Bundle bundle = intent.getExtras();

@@ -6,9 +6,8 @@ class FlutterNowplayingPlugin {
   static const MethodChannel _channel =
   const MethodChannel('flutter_nowplaying_plugin');
 
-  static Track _track;
   static Future<Track> get currentTrack async =>
-      _track = Track._fromMap(await _channel.invokeMethod('getCurrentTrack'));
+      Track._fromMap(await _channel.invokeMethod('getCurrentTrack'));
 }
 
 class Track {

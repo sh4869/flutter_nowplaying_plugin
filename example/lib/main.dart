@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_nowplaying_plugin/flutter_nowplaying_plugin.dart';
@@ -11,6 +13,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   Track _track = Track.empty();
+
   @override
   initState() {
     super.initState();
@@ -20,43 +23,44 @@ class _MyAppState extends State<MyApp> {
   // Platform messages are asynchronous, so we initialize in an async method.
   initPlatformState() async {
     Track track = Track.empty();
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      track = await FlutterNowplayingPlugin.currentTrack;
-      if (!mounted)
-        return;
-    } on PlatformException {
+    if(Platform.isAndroid) {
+      try {
+        track = await FlutterNowplayingPlugin.currentTrack;
+        if (!mounted)
+          return;
+      } on PlatformException {}
+      setState(() {
+        _track = track;
+      });
     }
-    setState(() {
-      _track =  track;
-    });
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
   }
+
   updateCurrentTrack() async {
     Track track = Track.empty();
     // Platform messages may fail, so we use a try/catch PlatformException.
-    print("log ");
-    try {
-      track = await FlutterNowplayingPlugin.currentTrack;
-    } on PlatformException {
-      print("log ");
+    if(Platform.isAndroid) {
+      try {
+        track = await FlutterNowplayingPlugin.currentTrack;
+      } on PlatformException {}
     }
     setState(() {
-      _track =  track;
+      _track = track;
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    var bodyText = Platform.isAndroid ? new Text(
+        'Current Playing Song:\nTitle: ${_track.title}\nAlbum: ${_track
+            .album}\nArtist: ${_track.artist}') : new Text(
+        "Sorry, iOS is not supported.");
     return new MaterialApp(
       home: new Scaffold(
         appBar: new AppBar(
           title: new Text('Plugin example app'),
         ),
         body: new Center(
-          child: new Text('Current Playing Song:\nTitle: ${_track.title}\nAlbum: ${_track.album}\nArtist: ${_track.artist}'),
+          child: bodyText,
         ),
         floatingActionButton: new FloatingActionButton(
             onPressed: updateCurrentTrack,
